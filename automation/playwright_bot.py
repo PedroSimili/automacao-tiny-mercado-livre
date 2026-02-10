@@ -19,7 +19,7 @@ load_dotenv()
 
 
 def tempo_de_espera():
-    time.sleep(4)
+    time.sleep(3)
     
 
 def opcao_do_usuario():
@@ -29,11 +29,17 @@ def opcao_do_usuario():
      print('3. Mercado Livre 3')
      escolha = input('Digite o número de de qual ML você quer ir')
      return escolha
-    
-escolha = opcao_do_usuario() 
+escolha = opcao_do_usuario()
 
-    
 
+# def Sua_MLBs():
+    # print('\n-----DIGITE SUA(s) MLBs-----')
+    # MLBs = input('Digite suas MLB(s)')
+    # return MLBs
+# MLBs = Sua_MLBs()
+    
+    
+    
 with sync_playwright() as pw: 
     navegador = pw.chromium.launch(headless=False)
     contexto = navegador.new_context()
@@ -57,7 +63,6 @@ with sync_playwright() as pw:
     pagina.get_by_role("link", name="Cadastros").click()
     pagina.get_by_role("link", name="Anúncios").click()
     time.sleep(6)
-    
     try:
         
         print(f'Voce escolheu a opcao {escolha}, vamos abrir o mercado livre {escolha}')
@@ -71,7 +76,28 @@ with sync_playwright() as pw:
         print('deu certo')
     except Exception as e:
         print(f'ERRO: {e}')
+        
+    pagina.get_by_role("link", name=" filtros").click()
+    tempo_de_espera()
+    pagina.locator("#filtroRelacionados").select_option("N")
+    pagina.get_by_role("button", name="Aplicar").click()
+    tempo_de_espera()
+    pagina.get_by_role("columnheader").first.click()
+    tempo_de_espera()
+    pagina.get_by_role("button", name="Mais ações ").nth(1).click()
+    pagina.get_by_role("link", name=" Relacionar anúncios").click()
+    pagina.get_by_role("button", name="Relacionar").click()
+    tempo_de_espera()
+    pagina.get_by_role("button", name="Fechar", exact=True).click()
+    pagina.get_by_role("button", name="fechar ").click()
+    tempo_de_espera()
     
+def _logout():
+    pagina.get_by_role("link", name="Menu Usuário").click()
+    tempo_de_espera()
+    pagina.get_by_role("link", name="Sair").click()
+    tempo_de_espera()
+        
 
         
 
