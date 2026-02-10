@@ -31,12 +31,18 @@ def opcao_do_usuario():
      return escolha
 escolha = opcao_do_usuario()
 
+def Sua_MLBs():
+    print('\n-----DIGITE SUA(s) MLBs-----')
+    MLBs = input('Digite suas MLB(s)')
+    return MLBs
+MLBs = Sua_MLBs()
 
-# def Sua_MLBs():
-    # print('\n-----DIGITE SUA(s) MLBs-----')
-    # MLBs = input('Digite suas MLB(s)')
-    # return MLBs
-# MLBs = Sua_MLBs()
+def _logout():
+    pagina.get_by_role("link", name="Menu Usuário").click()
+    tempo_de_espera()
+    pagina.get_by_role("link", name="Sair").click()
+    tempo_de_espera()
+        
     
     
     
@@ -77,6 +83,16 @@ with sync_playwright() as pw:
     except Exception as e:
         print(f'ERRO: {e}')
         
+    pagina.get_by_role("button", name="Mais ações ").click()   
+    pagina.get_by_role("link", name=" Importar anúncios").click()
+    pagina.get_by_text("um anúncio específico").click()
+    pagina.locator("input[name=\"identificadorAnuncio\"]").click()
+    pagina.locator("input[name=\"identificadorAnuncio\"]").fill(MLBs)
+    pagina.get_by_role("button", name="Prosseguir").click()
+    tempo_de_espera()
+    pagina.get_by_role("button", name="Fechar").click()
+    
+    
     pagina.get_by_role("link", name=" filtros").click()
     tempo_de_espera()
     pagina.locator("#filtroRelacionados").select_option("N")
@@ -92,17 +108,11 @@ with sync_playwright() as pw:
     pagina.get_by_role("button", name="fechar ").click()
     tempo_de_espera()
     
-def _logout():
-    pagina.get_by_role("link", name="Menu Usuário").click()
-    tempo_de_espera()
-    pagina.get_by_role("link", name="Sair").click()
-    tempo_de_espera()
-        
+    _logout()
 
         
 
 
     tempo_de_espera()
-    time.sleep(10)
     navegador.close()
     
