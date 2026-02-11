@@ -9,10 +9,10 @@ escolhida pelo usuário.
 
 
 import os
-from playwright.sync_api import sync_playwright
 from dotenv import load_dotenv
-import time
 import logging
+from playwright.sync_api import sync_playwright
+
 
 logging.basicConfig(
     level= logging.INFO,
@@ -32,9 +32,6 @@ class TinyAutomation:
         self.url_site = os.getenv('url_site')
         self.login_usuario = os.getenv('login')
         self.senha_usuario = os.getenv('senha')
-
-    def tempo_de_espera(self, segundos=3):
-        time.sleep(segundos)
         
 
     def opcao_do_usuario(self):
@@ -51,25 +48,27 @@ class TinyAutomation:
         except Exception:
             logger.exception('Erro ao armanezar a opção')
             raise
-    #escolha = opcao_do_usuario()
 
     def login(self):
         try:
             logger.info('Iniciando Login')
             
             self.pagina.goto(self.url_site)
-            
+            self.pagina.get_by_role("textbox", name="usuário").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("textbox", name="usuário").fill(self.login_usuario)
-            self.tempo_de_espera()
+            self.pagina.get_by_role("textbox", name="senha").wait_for(state='visible', timeout = 10000)
             self.pagina.get_by_role("textbox", name="senha").fill(self.senha_usuario)
-            self.tempo_de_espera()
+            self.pagina.get_by_role("button", name="Entrar").wait_for(state='visible', timeout = 10000)
             self.pagina.get_by_role("button", name="Entrar").click()
-            self.tempo_de_espera()
+            self.pagina.get_by_role("button", name="login").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("button", name="login").click()
+            self.pagina.locator(".btn-sidebar-menu").wait_for(state='visible', timeout=10000)
             self.pagina.locator(".btn-sidebar-menu").click()
+            self.pagina.get_by_role("link", name="Cadastros").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("link", name="Cadastros").click()
+            self.pagina.get_by_role("link", name="Anúncios").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("link", name="Anúncios").click()
-            time.sleep(6)
+            self.pagina.get_by_role("link", name="gerenciar").first.wait_for(state='visible', timeout=10000)
             logger.info('Login feito com sucesso!!!')
         except Exception:
             logger.exception('Erro no Login')
@@ -94,13 +93,19 @@ class TinyAutomation:
     def importar_para_ml(self, MLBs):
         try:
             logger.info('Inciando processo de importação...')
+            self.pagina.get_by_role("button", name="Mais ações").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("button", name="Mais ações").click()   
+            self.pagina.get_by_role("link", name="Importar anúncios").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("link", name="Importar anúncios").click()
+            self.pagina.get_by_text("um anúncio específico").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_text("um anúncio específico").click()
+            self.pagina.locator("input[name=\"identificadorAnuncio\"]").wait_for(state='visible', timeout=10000)
             self.pagina.locator("input[name=\"identificadorAnuncio\"]").click()
             self.pagina.locator("input[name=\"identificadorAnuncio\"]").fill(MLBs)
+            self.pagina.get_by_role("button", name="Prosseguir").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("button", name="Prosseguir").click()
-            self.tempo_de_espera()
+            #self.tempo_de_espera()
+            self.pagina.get_by_role("button", name="Fechar").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("button", name="Fechar").click()
             logger.info('Importação feita com sucesso')
         except Exception:
@@ -110,18 +115,18 @@ class TinyAutomation:
     def relacionar_ml(self, escolha):
         try:
             logger.info(f'Iniciando processo de relacionar ao ml{escolha}')
+            self.pagina.get_by_role("link", name="filtros").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("link", name="filtros").click()
-            self.tempo_de_espera()
             self.pagina.locator("#filtroRelacionados").select_option("N")
+            self.pagina.get_by_role("button", name="Aplicar").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("button", name="Aplicar").click()
-            self.tempo_de_espera()
             self.pagina.get_by_role("columnheader").first.click()
-            self.tempo_de_espera()
+            self.pagina.get_by_role("button", name="Mais ações").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("button", name="Mais ações").nth(1).click()
+            self.pagina.get_by_role("link", name="Relacionar anúncios").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("link", name="Relacionar anúncios").click()
             self.pagina.get_by_role("button", name="Relacionar").click()
-            self.tempo_de_espera()
-            #self.pagina.get_by_role("button", name="Fechar", exact=True).click()
+            self.pagina.get_by_role("button", name="fechar ").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("button", name="fechar ").click()
             logger.info(f'Processo de relacionar feito com sucesso ao ml{escolha}')
         except Exception:
@@ -138,15 +143,15 @@ class TinyAutomation:
         except Exception:
             logger.exception('Erro ao coletar as MLB(s)')
             raise
-    #MLBs = Sua_MLBs()
 
     def logout(self):
         try:
             logger.info('Iniciando processo de logout')
+            self.pagina.get_by_role("link", name="Menu Usuário").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("link", name="Menu Usuário").click()
-            self.tempo_de_espera()
+            self.pagina.get_by_role("link", name="Sair").wait_for(state='visible', timeout=10000)
             self.pagina.get_by_role("link", name="Sair").click()
-            self.tempo_de_espera()
+            self.pagina.get_by_role("textbox", name="usuário").wait_for(state='visible', timeout=10000)
             logger.info('Logout realizado com sucesso')
         except Exception:
             logger.exception('Erro ao tentar fazer o logout')
@@ -182,3 +187,5 @@ def main():
         logger.exception('Erro em na automação')
 if __name__ == '__main__':
     main()
+
+
