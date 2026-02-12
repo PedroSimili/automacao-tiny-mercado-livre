@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 import logging
 from playwright.sync_api import sync_playwright
 import time
+import re
 
 
 logging.basicConfig(
@@ -73,7 +74,13 @@ class TinyAutomation:
             self.fill(self.pagina.get_by_role("textbox", name="usuário"), self.login_usuario)
             self.fill(self.pagina.get_by_role("textbox", name="senha"), self.senha_usuario)
             self.click(self.pagina.get_by_role("button", name="Entrar"))
-            self.click(self.pagina.get_by_role("button", name="login"))
+            
+            try:
+                botao_login = self.pagina.get_by_role("button", name="login")
+                self.click(botao_login)
+            except Exception:
+                logger.info('Botão login não apareceu, seguindo fluxo')
+                
             self.click(self.pagina.locator(".btn-sidebar-menu"))
             self.click(self.pagina.get_by_role("link", name="Cadastros"))
             self.click(self.pagina.get_by_role("link", name="Anúncios"))
@@ -99,14 +106,14 @@ class TinyAutomation:
             logger.exception('Erro ao tentar ir ao ML')
             raise
             
-    def importar_para_ml(self, MLBs):
+    def importar_para_ml(self, mlb):
         try:
             logger.info('Inciando processo de importação...')
             self.click(self.pagina.get_by_role("button", name="Mais ações")) 
             self.click(self.pagina.get_by_role("link", name="Importar anúncios"))
             self.click(self.pagina.get_by_text("um anúncio específico"))
             self.click(self.pagina.locator("input[name=\"identificadorAnuncio\"]"))
-            self.fill(self.pagina.locator("input[name=\"identificadorAnuncio\"]"), MLBs)
+            self.fill(self.pagina.locator("input[name=\"identificadorAnuncio\"]"), mlb)
             self.click(self.pagina.get_by_role("button", name="Prosseguir"))
             self.click(self.pagina.get_by_role("button", name="Fechar"))
             logger.info('Importação feita com sucesso')
@@ -135,9 +142,24 @@ class TinyAutomation:
         try:
             logger.info('Iniciando processo de coleta das MLB(s)')
             print('\n-----DIGITE SUA(s) MLBs-----')
-            MLBs = input('Digite suas MLB(s)')
-            logger.info('MLB(s) coletadas com sucesso')
-            return MLBs
+            while True:
+                MLB = input('Digite sua MLB(s): ').strip()
+                
+                if not MLB:
+                    print('informe pelo menos uma MLB')
+                    logger.warning('Entrada de MLB(s) vazia')
+                    continue
+                
+                possiveis = [item.strip().upper() for item in re.split(r'[,\s;]+', MLB) if item.strip()]
+                validos = [item for item in possiveis if re.fullmatch(r'MLB\d+', item)]
+                
+                if not validos:
+                    print('Nenhuma MLB valida encontrada')
+                    logger.warning(f'Nenhuma MLB valida na entrada: {MLB}')
+                    continue
+                
+                logger.info(f'MLB(s) coletadas: {validos}')
+                return validos
         except Exception:
             logger.exception('Erro ao coletar as MLB(s)')
             raise
@@ -170,8 +192,8 @@ def main():
             automacao.ir_ao_ml(escolha)
         
             MLBs = automacao.sua_MLBs()
-            
-            automacao.importar_para_ml(MLBs)
+            for mlb in MLBs:
+                automacao.importar_para_ml(mlb)
         
             automacao.relacionar_ml(escolha)
         
