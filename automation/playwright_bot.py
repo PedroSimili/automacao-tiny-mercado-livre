@@ -14,6 +14,7 @@ import logging
 from playwright.sync_api import sync_playwright
 import time
 import re
+from datetime import datetime
 
 
 logging.basicConfig(
@@ -35,7 +36,55 @@ class TinyAutomation:
         self.login_usuario = os.getenv('login')
         self.senha_usuario = os.getenv('senha')
         
-
+        self.tempo_inicio = None
+        self.tempo_fim = None
+        self.escolha_ml = None
+        self.mlbs = []
+        self.mlbs_sucesso = []
+        self.mlbs_falha = []
+        
+    def print_sumarry(self):
+        self.tempo_fim = time.time()
+        tempo_total = (
+            self.tempo_fim - self.tempo_inicio
+            if self.tempo_fim and self.tempo_inicio else 0
+        )
+        
+        total = len(self.mlbs)
+        sucesso = len(self.mlbs_sucesso)
+        falha = len(self.mlbs_falha)
+        
+        pct_sucesso = (sucesso / total * 100) if total else 0
+        pct_falha = (falha / total * 100) if total else 0
+        
+        logger.info('-----RESUMO DA OPERAÇÃO-----')
+        logger.info(f'Conta ML escolhida: {self.escolha_ml}')
+        logger.info(f'Tempo total: {tempo_total:.2f}s ({tempo_total/60:.2f} minutos)')
+        
+        logger.info('-----ESTATÍSTICAS-----')
+        logger.info(f' Total de MLB(s): {total}')
+        logger.info(f' MLB(s) bem sucedidas: {sucesso} ({pct_sucesso:.1f}%)')
+        logger.info(f' MLB(s) com erro: {falha} ({pct_falha:.1f}%)')
+        
+        if self.mlbs_sucesso:
+            logger.info('MLB(s) IMPORTADAS COM SUCESSO: ')
+            for mlb in self.mlbs_sucesso:
+                logger.info(f' {mlb}')
+                
+        if self.mlbs_falha:
+            logger.info('MLB(s) COM FALHA: ')
+            for mlb in self.mlbs_falha:
+                logger.info(f' {mlb}')
+                
+        if falha == 0 and total > 0:
+            logger.info('AUTOMAÇÃO CONCLUIDA COM SUCESSO')
+        elif sucesso == 0 and total > 0:
+            logger.error('AUTOMAÇÃO FALHOU - NENHUMA MLB(s) FOI IMPORTADA')
+        else:
+            logger.warning('AUTOMAÇÃO CONCLUIDA COM ALGUMSA FALHAS')
+        
+        logger.info(f'Finalizada às {datetime.now().strftime('%H:%M:%S')}')
+        
     def opcao_do_usuario(self):
         try:
             logger.info('Inciando programa')
@@ -175,7 +224,8 @@ class TinyAutomation:
             logger.exception('Erro ao tentar fazer o logout')
             raise
             
-def main(): 
+def main():
+    automacao = None
     try:
         logger.info('Iniciando automação')  
         with sync_playwright() as pw: 
@@ -184,16 +234,26 @@ def main():
 
             pagina = contexto.new_page()
             automacao = TinyAutomation(pagina)
+            
+            automacao.tempo_inicio = time.time()
 
             automacao.login()
 
             escolha = automacao.opcao_do_usuario()
+            automacao.escolha_ml = escolha
             
             automacao.ir_ao_ml(escolha)
         
             MLBs = automacao.sua_MLBs()
+            automacao.mlbs = MLBs
+            
             for mlb in MLBs:
-                automacao.importar_para_ml(mlb)
+                try:
+                    automacao.importar_para_ml(mlb)
+                    automacao.mlbs_sucesso.append(mlb)
+                except Exception:
+                    automacao.mlbs_falha.append(mlb)
+                    logger.exception(f'Falha ao importar MLB: {mlb}')
         
             automacao.relacionar_ml(escolha)
         
@@ -203,6 +263,9 @@ def main():
             logger.info('Automação finalizada com sucesso')
     except Exception:
         logger.exception('Erro em na automação')
+    finally:
+        if automacao:
+            automacao.print_sumarry()
 if __name__ == '__main__':
     main()
 
