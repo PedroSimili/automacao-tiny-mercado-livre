@@ -126,7 +126,8 @@ class TinyAutomation:
             
             try:
                 botao_login = self.pagina.get_by_role("button", name="login")
-                self.click(botao_login)
+                botao_login.wait_for(state='visible', timeout=3000)
+                botao_login.click()
             except Exception:
                 logger.info('Botão login não apareceu, seguindo fluxo')
                 
