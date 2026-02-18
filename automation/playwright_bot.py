@@ -83,7 +83,7 @@ class TinyAutomation:
         else:
             logger.warning('AUTOMAÇÃO CONCLUIDA COM ALGUMSA FALHAS')
         
-        logger.info(f'Finalizada às {datetime.now().strftime('%H:%M:%S')}')
+        logger.info(f"Finalizada às {datetime.now().strftime('%H:%M:%S')}")
         
     def opcao_do_usuario(self):
         try:
@@ -164,11 +164,27 @@ class TinyAutomation:
             self.click(self.pagina.locator("input[name=\"identificadorAnuncio\"]"))
             self.fill(self.pagina.locator("input[name=\"identificadorAnuncio\"]"), mlb)
             self.click(self.pagina.get_by_role("button", name="Prosseguir"))
+            erro_importacao = self.pagina.get_by_text(
+                re.compile(r"Erro\s*Erro ao buscar a fam[ií]lia|Erro ao buscar a fam[ií]lia", re.IGNORECASE)).first
+            houve_erro_importacao = False
+
+            try:
+                erro_importacao.wait_for(state='visible', timeout=8000)
+                houve_erro_importacao = True
+            except Exception:
+                houve_erro_importacao = False
+
+            if houve_erro_importacao:
+                logger.error(f'Erro na importação da MLB {mlb}: Erro ao buscar a família')
+                self.click(self.pagina.get_by_role("button", name="Fechar"))
+                raise RuntimeError(f'Falha na importação da MLB {mlb}')
             self.click(self.pagina.get_by_role("button", name="Fechar"))
-            logger.info('Importação feita com sucesso')
+            logger.info(f'Importação feita com sucesso para {mlb}')
         except Exception:
             logger.exception('Erro ao realizar a importação')
             raise
+        
+                    
         
     def relacionar_ml(self, escolha):
         try:
@@ -248,12 +264,7 @@ def main():
             automacao.mlbs = MLBs
             
             for mlb in MLBs:
-                try:
-                    automacao.importar_para_ml(mlb)
-                    automacao.mlbs_sucesso.append(mlb)
-                except Exception:
-                    automacao.mlbs_falha.append(mlb)
-                    logger.exception(f'Falha ao importar MLB: {mlb}')
+                automacao.importar_com_retry(mlb, max_tentativas=2, esperar_segundos=2)
         
             automacao.relacionar_ml(escolha)
         
