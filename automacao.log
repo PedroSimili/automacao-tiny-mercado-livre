@@ -1,0 +1,120 @@
+2026-02-18 10:34:46,684 [INFO] Iniciando automação
+2026-02-18 10:34:56,113 [INFO] Iniciando Login
+2026-02-18 10:35:03,831 [INFO] Botão login não apareceu, seguindo fluxo
+2026-02-18 10:35:07,293 [INFO] Login feito com sucesso!!!
+2026-02-18 10:35:07,293 [INFO] Inciando programa
+2026-02-18 10:35:11,805 [INFO] A opção 1 foi armazenada com sucesso
+2026-02-18 10:35:11,805 [INFO] Indo para o ML1
+2026-02-18 10:35:13,295 [INFO] opção ML1 feita com sucesso
+2026-02-18 10:35:13,296 [INFO] Iniciando processo de coleta das MLB(s)
+2026-02-18 10:35:18,117 [INFO] MLB(s) coletadas: ['MLB123456']
+2026-02-18 10:35:18,372 [ERROR] Erro em na automação
+Traceback (most recent call last):
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 306, in main
+    automacao.importar_com_retry(mlb, max_tentativas=2, esperar_segundos=2)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TinyAutomation' object has no attribute 'importar_com_retry'
+2026-02-18 10:35:18,373 [INFO] -----RESUMO DA OPERAÇÃO-----
+2026-02-18 10:35:18,373 [INFO] Conta ML escolhida: 1
+2026-02-18 10:35:18,373 [INFO] Tempo total: 22.26s (0.37 minutos)
+2026-02-18 10:35:18,374 [INFO] -----ESTATÍSTICAS-----
+2026-02-18 10:35:18,374 [INFO]  Total de MLB(s): 1
+2026-02-18 10:35:18,374 [INFO]  MLB(s) bem sucedidas: 0 (0.0%)
+2026-02-18 10:35:18,374 [INFO]  MLB(s) com erro: 0 (0.0%)
+2026-02-18 10:35:18,374 [INFO] AUTOMAÇÃO CONCLUIDA COM SUCESSO
+2026-02-18 10:35:18,375 [INFO] Finalizada às 10:35:18
+2026-02-18 10:37:04,007 [INFO] Iniciando automação
+2026-02-18 10:37:05,042 [INFO] Iniciando Login
+2026-02-18 10:37:17,096 [INFO] Login feito com sucesso!!!
+2026-02-18 10:37:17,097 [INFO] Inciando programa
+2026-02-18 10:37:25,157 [INFO] A opção 1 foi armazenada com sucesso
+2026-02-18 10:37:25,157 [INFO] Indo para o ML1
+2026-02-18 10:37:26,661 [INFO] opção ML1 feita com sucesso
+2026-02-18 10:37:26,662 [INFO] Iniciando processo de coleta das MLB(s)
+2026-02-18 10:37:33,854 [INFO] MLB(s) coletadas: ['MLB123456']
+2026-02-18 10:37:33,855 [INFO] Importando MLB123456 (tentativa 1/2)
+2026-02-18 10:37:33,855 [INFO] Inciando processo de importação...
+2026-02-18 10:37:48,238 [INFO] Importação feita com sucesso para MLB123456
+2026-02-18 10:37:48,239 [INFO] Iniciando processo de relacionar ao ml1
+2026-02-18 10:38:03,206 [INFO] Processo de relacionar feito com sucesso ao ml1
+2026-02-18 10:38:03,207 [INFO] Iniciando processo de logout
+2026-02-18 10:38:05,629 [INFO] Logout realizado com sucesso
+2026-02-18 10:38:05,916 [INFO] Automação finalizada com sucesso
+2026-02-18 10:38:05,929 [INFO] -----RESUMO DA OPERAÇÃO-----
+2026-02-18 10:38:05,929 [INFO] Conta ML escolhida: 1
+2026-02-18 10:38:05,929 [INFO] Tempo total: 60.89s (1.01 minutos)
+2026-02-18 10:38:05,929 [INFO] -----ESTATÍSTICAS-----
+2026-02-18 10:38:05,930 [INFO]  Total de MLB(s): 1
+2026-02-18 10:38:05,930 [INFO]  MLB(s) bem sucedidas: 1 (100.0%)
+2026-02-18 10:38:05,930 [INFO]  MLB(s) com erro: 0 (0.0%)
+2026-02-18 10:38:05,930 [INFO] MLB(s) IMPORTADAS COM SUCESSO: 
+2026-02-18 10:38:05,930 [INFO]  MLB123456
+2026-02-18 10:38:05,930 [INFO] AUTOMAÇÃO CONCLUIDA COM SUCESSO
+2026-02-18 10:38:05,931 [INFO] Finalizada às 10:38:05
+2026-02-18 11:02:39,823 [INFO] Iniciando automação
+2026-02-18 11:02:40,970 [INFO] Iniciando Login
+2026-02-18 11:02:48,493 [INFO] Botão login não apareceu, seguindo fluxo
+2026-02-18 11:02:51,654 [INFO] Login feito com sucesso!!!
+2026-02-18 11:02:51,655 [INFO] Inciando programa
+2026-02-18 11:02:54,647 [INFO] A opção 1 foi armazenada com sucesso
+2026-02-18 11:02:54,648 [INFO] Indo para o ML1
+2026-02-18 11:02:56,796 [INFO] opção ML1 feita com sucesso
+2026-02-18 11:02:56,797 [INFO] Iniciando processo de coleta das MLB(s)
+2026-02-18 11:03:00,228 [INFO] MLB(s) coletadas: ['MLB123456']
+2026-02-18 11:03:00,229 [INFO] Importando MLB123456 (tentativa 1/2)
+2026-02-18 11:03:00,229 [INFO] Inciando processo de importação...
+2026-02-18 11:03:17,745 [ERROR] Erro na importação da MLB MLB123456: Erro exibido na tela de importação
+2026-02-18 11:03:18,656 [ERROR] Erro ao realizar a importação
+Traceback (most recent call last):
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 196, in importar_para_ml
+    raise RuntimeError(f'Falha na importação da MLB {mlb}')
+RuntimeError: Falha na importação da MLB MLB123456
+2026-02-18 11:03:18,700 [WARNING] Falha ao importar MLB123456 na tentativa 1. Nova tentativa em 2s.
+2026-02-18 11:03:28,100 [INFO] Nova MLB informada para correção: MLB123456
+2026-02-18 11:03:30,101 [INFO] Importando MLB123456 (tentativa 2/2)
+2026-02-18 11:03:30,102 [INFO] Inciando processo de importação...
+2026-02-18 11:03:47,531 [ERROR] Erro na importação da MLB MLB123456: Erro exibido na tela de importação
+2026-02-18 11:03:48,444 [ERROR] Erro ao realizar a importação
+Traceback (most recent call last):
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 196, in importar_para_ml
+    raise RuntimeError(f'Falha na importação da MLB {mlb}')
+RuntimeError: Falha na importação da MLB MLB123456
+2026-02-18 11:03:48,447 [ERROR] Falha definitiva ao importar MLB123456 apos 2 tentativas
+Traceback (most recent call last):
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 223, in importar_novamente
+    self.importar_para_ml(mlb_tentativa)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 196, in importar_para_ml
+    raise RuntimeError(f'Falha na importação da MLB {mlb}')
+RuntimeError: Falha na importação da MLB MLB123456
+2026-02-18 11:03:48,709 [ERROR] Erro em na automação
+Traceback (most recent call last):
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 223, in importar_novamente
+    self.importar_para_ml(mlb_tentativa)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 196, in importar_para_ml
+    raise RuntimeError(f'Falha na importação da MLB {mlb}')
+RuntimeError: Falha na importação da MLB MLB123456
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 321, in main
+    automacao.importar_novamente(mlb, max_tentativas=2, esperar_segundos=2)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pedro\Documents\sistema_automacao\automacao-tiny-mercado-livre\automation\playwright_bot.py", line 239, in importar_novamente
+    raise RuntimeError(
+        f'Erro na importação da MLB {mlb_tentativa}. Encerrando automação.'
+    )
+RuntimeError: Erro na importação da MLB MLB123456. Encerrando automação.
+2026-02-18 11:03:48,712 [INFO] -----RESUMO DA OPERAÇÃO-----
+2026-02-18 11:03:48,712 [INFO] Conta ML escolhida: 1
+2026-02-18 11:03:48,712 [INFO] Tempo total: 67.74s (1.13 minutos)
+2026-02-18 11:03:48,712 [INFO] -----ESTATÍSTICAS-----
+2026-02-18 11:03:48,713 [INFO]  Total de MLB(s): 1
+2026-02-18 11:03:48,713 [INFO]  MLB(s) bem sucedidas: 0 (0.0%)
+2026-02-18 11:03:48,713 [INFO]  MLB(s) com erro: 1 (100.0%)
+2026-02-18 11:03:48,713 [INFO] MLB(s) COM FALHA: 
+2026-02-18 11:03:48,713 [INFO]  MLB123456
+2026-02-18 11:03:48,714 [ERROR] AUTOMAÇÃO FALHOU - NENHUMA MLB(s) FOI IMPORTADA
+2026-02-18 11:03:48,714 [INFO] Finalizada às 11:03:48

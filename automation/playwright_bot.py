@@ -166,17 +166,32 @@ class TinyAutomation:
             self.fill(self.pagina.locator("input[name=\"identificadorAnuncio\"]"), mlb)
             self.click(self.pagina.get_by_role("button", name="Prosseguir"))
             erro_importacao = self.pagina.get_by_text(
-                re.compile(r"Erro\s*Erro ao buscar a fam[ií]lia|Erro ao buscar a fam[ií]lia", re.IGNORECASE)).first
+                re.compile(
+                    r"Erro\s*Erro ao buscar a fam[ií]lia|Erro ao buscar a fam[ií]lia|n[aã]o foi encontrad[ao] individualmente",
+                    re.IGNORECASE
+                )
+            ).first
+            titulo_erro = self.pagina.get_by_role(
+                "heading",
+                name=re.compile(r"^Erro$", re.IGNORECASE)
+            ).first
             houve_erro_importacao = False
+            mensagem_erro = ''
 
             try:
-                erro_importacao.wait_for(state='visible', timeout=8000)
+                erro_importacao.wait_for(state='visible', timeout=12000)
                 houve_erro_importacao = True
+                mensagem_erro = erro_importacao.inner_text().strip()
             except Exception:
-                houve_erro_importacao = False
+                try:
+                    titulo_erro.wait_for(state='visible', timeout=1500)
+                    houve_erro_importacao = True
+                    mensagem_erro = 'Erro exibido na tela de importação'
+                except Exception:
+                    houve_erro_importacao = False
 
             if houve_erro_importacao:
-                logger.error(f'Erro na importação da MLB {mlb}: Erro ao buscar a família')
+                logger.error(f'Erro na importação da MLB {mlb}: {mensagem_erro}')
                 self.click(self.pagina.get_by_role("button", name="Fechar"))
                 raise RuntimeError(f'Falha na importação da MLB {mlb}')
             self.click(self.pagina.get_by_role("button", name="Fechar"))
@@ -184,9 +199,47 @@ class TinyAutomation:
         except Exception:
             logger.exception('Erro ao realizar a importação')
             raise
-        
-                    
-        
+
+    def solicitar_mlb_correcao(self, mlb_com_erro):
+        while True:
+            nova_mlb = input(
+                f'Erro ao importar {mlb_com_erro}. Digite uma MLB correta para nova tentativa: '
+            ).strip().upper()
+
+            if re.fullmatch(r'MLB\d+', nova_mlb):
+                logger.info(f'Nova MLB informada para correção: {nova_mlb}')
+                return nova_mlb
+
+            print('MLB inválida. Use o formato MLB123456.')
+            logger.warning(f'MLB de correção inválida: {nova_mlb}')
+
+    def importar_novamente(self, mlb, max_tentativas = 2, esperar_segundos = 2):
+        mlb_tentativa = mlb
+        for tentativa in range(1, max_tentativas + 1):
+            try:
+                logger.info(
+                    f'Importando {mlb_tentativa} (tentativa {tentativa}/{max_tentativas})'
+                )
+                self.importar_para_ml(mlb_tentativa)
+                self.mlbs_sucesso.append(mlb_tentativa)
+                return True
+            except Exception:
+                if tentativa < max_tentativas:
+                    logger.warning(
+                        f'Falha ao importar {mlb_tentativa} na tentativa {tentativa}. '
+                        f'Nova tentativa em {esperar_segundos}s.'
+                    )
+                    mlb_tentativa = self.solicitar_mlb_correcao(mlb_tentativa)
+                    time.sleep(esperar_segundos)
+                else:
+                    logger.exception(
+                        f'Falha definitiva ao importar {mlb_tentativa} apos {max_tentativas} tentativas'
+                    )
+                    self.mlbs_falha.append(mlb_tentativa)
+                    raise RuntimeError(
+                        f'Erro na importação da MLB {mlb_tentativa}. Encerrando automação.'
+                    )
+
     def relacionar_ml(self, escolha):
         try:
             logger.info(f'Iniciando processo de relacionar ao ml{escolha}')
@@ -265,7 +318,7 @@ def main():
             automacao.mlbs = MLBs
             
             for mlb in MLBs:
-                automacao.importar_com_retry(mlb, max_tentativas=2, esperar_segundos=2)
+                automacao.importar_novamente(mlb, max_tentativas=2, esperar_segundos=2)
         
             automacao.relacionar_ml(escolha)
         
